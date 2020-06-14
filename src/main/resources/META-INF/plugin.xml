@@ -1,0 +1,32 @@
+<idea-plugin>
+    <version>1.0.1-SNAPSHOT</version>
+    <change-notes>
+        <![CDATA[
+      The <b>first</b> release. It will change your background images each branch.
+    ]]>
+    </change-notes>
+    <idea-version since-build="193.5233" until-build="193.*"/>
+    <id>hwang.gg.gitLazyEye</id>
+    <name>GitLazyEye</name>
+    <vendor email="lv0gun9@gmail.com">GunnGu, Hwang</vendor>
+    <description>
+        This plugin for change background image for each git branch.
+        For example, if you have "very" serious branch then change wallpaper "very" special image.
+        Then you can find out easily what branch you are.
+    </description>
+    <depends>com.intellij.modules.platform</depends>
+    <depends>Git4Idea</depends>
+    <extensions defaultExtensionNs="com.intellij"/>
+    <projectListeners>
+        <listener class="hwang.gg.gitLazyEye.GitEventListener"
+                  topic="com.intellij.openapi.vcs.BranchChangeListener">
+        </listener>
+    </projectListeners>
+    <actions>
+        <action id="hwang.gg.gitLazyEye.SimpleAction" class="hwang.gg.gitLazyEye.SimpleAction" text="GitLazyEye"
+                description="GitLazyEye setting">
+            <keyboard-shortcut first-keystroke="control shift G" keymap="$default"/>
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>
