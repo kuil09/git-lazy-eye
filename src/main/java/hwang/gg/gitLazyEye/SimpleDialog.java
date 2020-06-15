@@ -25,7 +25,6 @@ public class SimpleDialog extends DialogWrapper {
 
   PropertiesComponent prop;
     Project activeProject;
-    String currentProjectName;
     String currentBranch;
     String selectedBranch;
     String currentImagePath;
@@ -112,7 +111,6 @@ public class SimpleDialog extends DialogWrapper {
     private void initProject() {
         this.activeProject = ProjectUtil.getActiveProject();
         prop = PropertiesComponent.getInstance(this.activeProject);
-        this.currentProjectName = this.activeProject.getName();
     }
 
     private void setCurrentBranch() {

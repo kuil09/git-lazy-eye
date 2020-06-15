@@ -5,7 +5,7 @@
       The <b>first</b> release. It will change your background images each branch.
     ]]>
     </change-notes>
-    <idea-version since-build="193.5233" until-build="193.*"/>
+    <idea-version since-build="201" until-build="201.*"/>
     <id>hwang.gg.gitLazyEye</id>
     <name>GitLazyEye</name>
     <vendor email="lv0gun9@gmail.com">GunnGu, Hwang</vendor>
