@@ -1,12 +1,9 @@
 <idea-plugin>
     <version>1.0.0</version>
     <change-notes><![CDATA[
-      The <b>first</b> release. It will change your background images each branch.
-      I often forgot branch and commit wrongly, So I built this.<br>
-      - Install plugin<br>
-      - Go to your project (must using git)<br>
-      - Go to Tool menu and click GitLazyEye (Ctrl + Shift + G)<br>
-      - Select image path for each branch. * Checkout branch<br>
+      <ul>
+        <li>1.0.0: First release. it can change background image each branch.</li>
+      </ul>
     ]]>
     </change-notes>
     <idea-version since-build="201" until-build="201.*"/>
