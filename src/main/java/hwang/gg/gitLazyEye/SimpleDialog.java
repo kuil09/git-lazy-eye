@@ -18,6 +18,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.swing.JOptionPane.showMessageDialog;
+
 public class SimpleDialog extends DialogWrapper {
 
   private final ArrayList<JPanel> cardList = new ArrayList<>();
@@ -66,6 +68,7 @@ public class SimpleDialog extends DialogWrapper {
           String path = file == null ? "" : file.getAbsolutePath();
 
           if (!ImageUtil.validate(path)) {
+              showMessageDialog(null, "Image file is not suitable. (ex: jpg|jpeg|png|gif|bmp)");
               path = "";
           }
 

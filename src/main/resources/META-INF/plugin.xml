@@ -1,5 +1,5 @@
 <idea-plugin>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <change-notes>
         <![CDATA[
       The <b>first</b> release. It will change your background images each branch.
