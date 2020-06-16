@@ -74,6 +74,7 @@ public class SimpleDialog extends DialogWrapper {
 
           imageFolder.setText(path);
           selectedImagePath = path;
+          setImagePath(selectedBranch, selectedImagePath);
       }
     });
 
@@ -137,7 +138,6 @@ public class SimpleDialog extends DialogWrapper {
     @Override
     protected void doOKAction() {
         super.doOKAction();
-        this.setImagePath(this.selectedBranch, this.selectedImagePath);
     }
 
     private void setImagePath(final String selectedBranch, final String selectedImagePath) {
