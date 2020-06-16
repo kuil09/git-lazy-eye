@@ -22,5 +22,8 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-      First release"""
+      <ul>
+        <li>1.0.0: First release. it can change background image each branch.</li>
+      </ul>
+    """
 }
