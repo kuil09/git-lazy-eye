@@ -1,7 +1,6 @@
 <idea-plugin>
     <version>1.0.0</version>
-    <change-notes>
-        <![CDATA[
+    <change-notes><![CDATA[
       The <b>first</b> release. It will change your background images each branch.
       I often forgot branch and commit wrongly, So I built this.<br>
       - Install plugin<br>
