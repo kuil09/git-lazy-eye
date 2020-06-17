@@ -25,10 +25,12 @@ public class SimpleDialog extends DialogWrapper {
   private final ArrayList<JPanel> cardList = new ArrayList<>();
   private final JPanel cardLayout = new JPanel(new CardLayout());
 
+  List<String> branchList = ProjectUtil.getBranchList();
+  ComboBox branches = new ComboBox(branchList.toArray(new String[0]));
+
   PropertiesComponent prop;
     Project activeProject;
     String currentBranch;
-    String selectedBranch;
     String currentImagePath;
     String selectedImagePath;
 
@@ -73,14 +75,10 @@ public class SimpleDialog extends DialogWrapper {
           } else {
               imageFolder.setText(path);
               selectedImagePath = path;
-              setImagePath(selectedBranch, selectedImagePath);
+              setImagePath(branches.getSelectedItem().toString(), selectedImagePath);
           }
       }
     });
-
-      List<String> branchList = ProjectUtil.getBranchList();
-
-      ComboBox branches = new ComboBox(branchList.toArray(new String[0]));
 
       this.setCurrentBranch();
       if (this.currentBranch != null) {
@@ -92,8 +90,8 @@ public class SimpleDialog extends DialogWrapper {
     branches.addItemListener(e -> {
       if (e.getStateChange() == ItemEvent.SELECTED) {
           Object item = e.getItem();
-          this.selectedBranch = item.toString();
-          this.selectedImagePath = prop.getValue(selectedBranch);
+          this.branches.getSelectedItem().toString();
+          this.selectedImagePath = prop.getValue(this.branches.getSelectedItem().toString());
           imageFolder.setText(selectedImagePath);
       }
     });

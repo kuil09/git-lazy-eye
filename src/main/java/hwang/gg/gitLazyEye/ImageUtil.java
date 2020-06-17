@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class ImageUtil {
 
     private static final String IMAGE_PATTERN =
-            "([^\\s]+(\\.(?i)(jpg|jpeg|png|gif|bmp))$)";
+            "([^*]+(\\.(?i)(jpg|jpeg|png|gif|bmp))$)";
 
     private ImageUtil() {
     }
