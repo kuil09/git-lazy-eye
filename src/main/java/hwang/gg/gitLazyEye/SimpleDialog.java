@@ -29,10 +29,10 @@ public class SimpleDialog extends DialogWrapper {
   ComboBox branches = new ComboBox(branchList.toArray(new String[0]));
 
   PropertiesComponent prop;
-    Project activeProject;
-    String currentBranch;
-    String currentImagePath;
-    String selectedImagePath;
+  Project activeProject;
+  String currentBranch;
+  String currentImagePath;
+  String selectedImagePath;
 
   protected SimpleDialog() {
     super(true);
@@ -44,9 +44,9 @@ public class SimpleDialog extends DialogWrapper {
   @Nullable
   @Override
   protected JComponent createCenterPanel() {
-      this.initProject();
+    this.initProject();
 
-    JPanel mainLayout = new JPanel(new GridLayout(0,1));
+    JPanel mainLayout = new JPanel(new GridLayout(0, 1));
     JLabel label = new JLabel("Select branch for background setting: ");
     JLabel label2 = new JLabel("Select an image from disk:");
 
@@ -59,88 +59,88 @@ public class SimpleDialog extends DialogWrapper {
         JFileChooser fc = new JFileChooser();
         String current = imageFolder.getText();
 
-          if (!current.isEmpty()) {
-              fc.setCurrentDirectory(new File(current));
-          }
+        if (!current.isEmpty()) {
+          fc.setCurrentDirectory(new File(current));
+        }
 
-          fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-          fc.showOpenDialog(mainLayout);
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.showOpenDialog(mainLayout);
 
-          File file = fc.getSelectedFile();
-          String path = file == null ? "" : file.getAbsolutePath();
+        File file = fc.getSelectedFile();
+        String path = file == null ? "" : file.getAbsolutePath();
 
-          if (!ImageUtil.validate(path)) {
-              showMessageDialog(null, "Image file is not suitable. (ex: jpg|jpeg|png|gif|bmp)");
-              path = "";
-          } else {
-              imageFolder.setText(path);
-              selectedImagePath = path;
-              setImagePath(branches.getSelectedItem().toString(), selectedImagePath);
-          }
+        if (!ImageUtil.validate(path)) {
+          showMessageDialog(null, "Image file is not suitable. (ex: jpg|jpeg|png|gif|bmp)");
+          path = "";
+        } else {
+          imageFolder.setText(path);
+          selectedImagePath = path;
+          setImagePath(branches.getSelectedItem().toString(), selectedImagePath);
+        }
       }
     });
 
-      this.setCurrentBranch();
-      if (this.currentBranch != null) {
-          branches.setSelectedItem(this.currentBranch);
-          this.currentImagePath = prop.getValue(this.currentBranch);
-          imageFolder.setText(this.currentImagePath);
-      }
+    this.setCurrentBranch();
+    if (this.currentBranch != null) {
+      branches.setSelectedItem(this.currentBranch);
+      this.currentImagePath = prop.getValue(this.currentBranch);
+      imageFolder.setText(this.currentImagePath);
+    }
 
     branches.addItemListener(e -> {
       if (e.getStateChange() == ItemEvent.SELECTED) {
-          Object item = e.getItem();
-          this.branches.getSelectedItem().toString();
-          this.selectedImagePath = prop.getValue(this.branches.getSelectedItem().toString());
-          imageFolder.setText(selectedImagePath);
+        Object item = e.getItem();
+        this.branches.getSelectedItem().toString();
+        this.selectedImagePath = prop.getValue(this.branches.getSelectedItem().toString());
+        imageFolder.setText(selectedImagePath);
       }
     });
 
     this.applyCards();
 
-      mainLayout.add(label);
-      mainLayout.add(branches);
-      mainLayout.add(label2);
-      mainLayout.add(cardLayout);
-      mainLayout.add(imageFolder);
+    mainLayout.add(label);
+    mainLayout.add(branches);
+    mainLayout.add(label2);
+    mainLayout.add(cardLayout);
+    mainLayout.add(imageFolder);
 
-      return mainLayout;
+    return mainLayout;
   }
 
-    /**
-     * Find and set activated project. It must load current(activated) project's property.
-     */
-    private void initProject() {
-        this.activeProject = ProjectUtil.getActiveProject();
-        prop = PropertiesComponent.getInstance(this.activeProject);
+  /**
+   * Find and set activated project. It must load current(activated) project's property.
+   */
+  private void initProject() {
+    this.activeProject = ProjectUtil.getActiveProject();
+    prop = PropertiesComponent.getInstance(this.activeProject);
+  }
+
+  private void setCurrentBranch() {
+    this.currentBranch = ProjectUtil.getCurrentBranchName();
+  }
+
+  private void applyCards() {
+    if (cardList.isEmpty()) {
+      this.addCardPanel();
     }
 
-    private void setCurrentBranch() {
-        this.currentBranch = ProjectUtil.getCurrentBranchName();
+    for (JPanel item : cardList) {
+      cardLayout.add(item);
     }
+  }
 
-    private void applyCards() {
-        if (cardList.isEmpty()) {
-            this.addCardPanel();
-        }
+  private void addCardPanel() {
+    cardList.add(new JPanel());
+  }
 
-        for (JPanel item : cardList) {
-            cardLayout.add(item);
-        }
+  @Override
+  protected void doOKAction() {
+    super.doOKAction();
+  }
+
+  private void setImagePath(final String selectedBranch, final String selectedImagePath) {
+    if (selectedBranch != null) {
+      prop.setValue(selectedBranch, selectedImagePath);
     }
-
-    private void addCardPanel() {
-        cardList.add(new JPanel());
-    }
-
-    @Override
-    protected void doOKAction() {
-        super.doOKAction();
-    }
-
-    private void setImagePath(final String selectedBranch, final String selectedImagePath) {
-        if (selectedBranch != null) {
-            prop.setValue(selectedBranch, selectedImagePath);
-        }
-    }
+  }
 }
