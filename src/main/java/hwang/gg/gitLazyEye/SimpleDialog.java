@@ -70,11 +70,11 @@ public class SimpleDialog extends DialogWrapper {
           if (!ImageUtil.validate(path)) {
               showMessageDialog(null, "Image file is not suitable. (ex: jpg|jpeg|png|gif|bmp)");
               path = "";
+          } else {
+              imageFolder.setText(path);
+              selectedImagePath = path;
+              setImagePath(selectedBranch, selectedImagePath);
           }
-
-          imageFolder.setText(path);
-          selectedImagePath = path;
-          setImagePath(selectedBranch, selectedImagePath);
       }
     });
 
