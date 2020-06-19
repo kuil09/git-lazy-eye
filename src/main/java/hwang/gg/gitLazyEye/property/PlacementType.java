@@ -1,4 +1,4 @@
-package hwang.gg.gitLazyEye;
+package hwang.gg.gitLazyEye.property;
 
 public enum PlacementType {
   CENTER,

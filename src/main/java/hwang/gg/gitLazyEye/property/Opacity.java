@@ -1,4 +1,4 @@
-package hwang.gg.gitLazyEye;
+package hwang.gg.gitLazyEye.property;
 
 public class Opacity {
   public static final int MIN = 0;
