@@ -13,9 +13,6 @@ public class GitEventListener implements BranchChangeListener {
 
   @Override
   public void branchHasChanged(@NotNull final String branchName) {
-    PropertiesComponent prop = PropertiesComponent.getInstance(ProjectUtil.getActiveProject());
-    String imagePath = prop.getValue(branchName);
-    prop.setValue(IdeBackgroundUtil.EDITOR_PROP, imagePath);
-    IdeBackgroundUtil.repaintAllWindows();
+    ImageUtil.repaint(branchName);
   }
 }
