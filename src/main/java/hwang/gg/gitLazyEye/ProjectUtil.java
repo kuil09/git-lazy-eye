@@ -44,15 +44,15 @@ public class ProjectUtil {
     Project[] projects = ProjectManager.getInstance()
             .getOpenProjects();
 
+    Window window;
     for (Project project : projects) {
-
-      Window window = WindowManager.getInstance()
+      window = WindowManager.getInstance()
               .suggestParentWindow(project);
 
       if (window != null && window.isActive()) {
         return project;
       }
     }
-    throw new RuntimeException("No active project found.");
+    return ProjectManager.getInstance().getDefaultProject();
   }
 }
