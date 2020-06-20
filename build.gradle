@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'hwang.gg.gitLazyEye'
-version '1.1.0-RC'
+version '1.1.1'
 
 repositories {
     mavenCentral()
@@ -23,6 +23,7 @@ intellij {
 patchPluginXml {
     changeNotes """
       <ul>
+        <li>1.1.1: Add clear background and image from URL feature</li>
         <li>1.1.0: Add fill, opacity and placement setting features.</li>
         <li>1.0.2: Fix minor bug. Image path save bug fixed.</li>
         <li>1.0.1: Fix minor bug.</li>
