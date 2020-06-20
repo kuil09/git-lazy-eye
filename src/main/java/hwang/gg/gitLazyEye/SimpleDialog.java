@@ -61,7 +61,7 @@ public class SimpleDialog extends DialogWrapper {
     JPanel mainLayout = new JPanel(new GridLayout(0, 1));
     JLabel labelBranch = new JLabel("Select branch for background setting: ");
     JLabel labelImage = new JLabel("Select an image from disk(or paste image URL):");
-    JLabel labelOpacity = new JLabel("Select opacity: ");
+    JLabel labelOpacity = new JLabel("Select opacity (invisible to visible): ");
     JLabel labelFillType = new JLabel("Select fill type:");
     JLabel labelPlacement = new JLabel("Select placement:");
 
