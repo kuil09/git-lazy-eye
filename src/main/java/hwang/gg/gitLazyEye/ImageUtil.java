@@ -12,7 +12,8 @@ public class ImageUtil {
   private static final String IMAGE_PATTERN =
           "([^*]+(\\.(?i)(jpg|jpeg|png|gif|bmp))$)";
 
-  private static final String URL_PATTERN = "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)\n";
+  private static final String URL_PATTERN =
+          "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)\n";
 
   private ImageUtil() {
   }
