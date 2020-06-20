@@ -21,7 +21,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,14 +28,11 @@ import static javax.swing.JOptionPane.showMessageDialog;
 
 public class SimpleDialog extends DialogWrapper {
 
-  private final ArrayList<JPanel> cardList = new ArrayList<>();
-  private final JPanel cardLayout = new JPanel(new CardLayout());
-
   List<String> branchList;
   ComboBox branchCombo;
   final JSlider opacitySlider = new JSlider(JSlider.HORIZONTAL, Opacity.MIN, Opacity.MAX, 0);
   final ComboBox fillTypeCombo = new ComboBox(FillType.values());
-  final ComboBox placementTypeComobo = new ComboBox(PlacementType.values());
+  final ComboBox placementTypeCombo = new ComboBox(PlacementType.values());
 
   PropertiesComponent prop;
   String currentBranch;
@@ -60,7 +56,7 @@ public class SimpleDialog extends DialogWrapper {
 
     JPanel mainLayout = new JPanel(new GridLayout(0, 1));
     JLabel labelBranch = new JLabel("Select branch for background setting: ");
-    JLabel labelImage = new JLabel("Select an image from disk(or paste image URL):");
+    JLabel labelImage = new JLabel("Select an image from disk(or paste image URL): ");
     JLabel labelOpacity = new JLabel("Select opacity (invisible to visible): ");
     JLabel labelFillType = new JLabel("Select fill type:");
     JLabel labelPlacement = new JLabel("Select placement:");
@@ -72,13 +68,10 @@ public class SimpleDialog extends DialogWrapper {
     this.initFillTypeCombo();
     this.initPlacementTypeCombo();
 
-    this.applyCards();
-
     mainLayout.add(labelBranch);
     mainLayout.add(branchCombo);
 
     mainLayout.add(labelImage);
-    mainLayout.add(cardLayout);
     mainLayout.add(imageFolder);
 
     mainLayout.add(labelOpacity);
@@ -88,7 +81,7 @@ public class SimpleDialog extends DialogWrapper {
     mainLayout.add(fillTypeCombo);
 
     mainLayout.add(labelPlacement);
-    mainLayout.add(placementTypeComobo);
+    mainLayout.add(placementTypeCombo);
 
     return mainLayout;
   }
@@ -110,9 +103,9 @@ public class SimpleDialog extends DialogWrapper {
   }
 
   private void initPlacementTypeCombo() {
-    this.placementTypeComobo.setSelectedItem(imageProperty.getPlacementType());
-    this.placementTypeComobo.addItemListener(e -> {
-      imageProperty.setPlacementType((PlacementType) this.placementTypeComobo.getSelectedItem());
+    this.placementTypeCombo.setSelectedItem(imageProperty.getPlacementType());
+    this.placementTypeCombo.addItemListener(e -> {
+      imageProperty.setPlacementType((PlacementType) this.placementTypeCombo.getSelectedItem());
       setImageProperty();
     });
   }
@@ -136,7 +129,7 @@ public class SimpleDialog extends DialogWrapper {
         imageFolder.setText(this.imageProperty.getImagePath());
         this.opacitySlider.setValue(this.imageProperty.getOpacity());
         this.fillTypeCombo.setSelectedItem(this.imageProperty.getFillType());
-        this.placementTypeComobo.setSelectedItem(this.imageProperty.getPlacementType());
+        this.placementTypeCombo.setSelectedItem(this.imageProperty.getPlacementType());
 
         this.setImageProperty();
       }
@@ -205,20 +198,6 @@ public class SimpleDialog extends DialogWrapper {
     this.currentBranch = currentBranch;
     String props = prop.getValue(this.currentBranch);
     this.imageProperty = new ImageProperty(props);
-  }
-
-  private void applyCards() {
-    if (cardList.isEmpty()) {
-      this.addCardPanel();
-    }
-
-    for (JPanel item : cardList) {
-      cardLayout.add(item);
-    }
-  }
-
-  private void addCardPanel() {
-    cardList.add(new JPanel());
   }
 
   @Override
