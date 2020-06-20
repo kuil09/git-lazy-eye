@@ -7,16 +7,19 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.ui.DocumentAdapter;
 import hwang.gg.gitLazyEye.property.FillType;
 import hwang.gg.gitLazyEye.property.ImageProperty;
 import hwang.gg.gitLazyEye.property.Opacity;
 import hwang.gg.gitLazyEye.property.PlacementType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +48,7 @@ public class SimpleDialog extends DialogWrapper {
     super(true);
     init();
     setTitle("GitLazyEye");
+    setCancelButtonText("Clear");
     getCancelAction().setEnabled(true);
     getOKAction().setEnabled(true);
   }
@@ -56,7 +60,7 @@ public class SimpleDialog extends DialogWrapper {
 
     JPanel mainLayout = new JPanel(new GridLayout(0, 1));
     JLabel labelBranch = new JLabel("Select branch for background setting: ");
-    JLabel labelImage = new JLabel("Select an image from disk:");
+    JLabel labelImage = new JLabel("Select an image from disk(or paste image URL):");
     JLabel labelOpacity = new JLabel("Select opacity: ");
     JLabel labelFillType = new JLabel("Select fill type:");
     JLabel labelPlacement = new JLabel("Select placement:");
@@ -143,6 +147,16 @@ public class SimpleDialog extends DialogWrapper {
                                       final TextFieldWithBrowseButton imageFolder) {
     FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
 
+    imageFolder.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
+      @Override
+      protected void textChanged(@NotNull DocumentEvent e) {
+        var path = imageFolder.getTextField().getText();
+        imageProperty.setImagePath(path);
+        setImageProperty(Objects.requireNonNull(currentBranch));
+      }
+    });
+
+
     imageFolder.addBrowseFolderListener(new TextBrowseFolderListener(descriptor) {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -159,15 +173,19 @@ public class SimpleDialog extends DialogWrapper {
         File file = fc.getSelectedFile();
         String path = file == null ? "" : file.getAbsolutePath();
 
-        if (!ImageUtil.validate(path)) {
-          showMessageDialog(null, "Image file is not suitable. (ex: jpg|jpeg|png|gif|bmp)");
-        } else {
-          imageFolder.setText(path);
-          imageProperty.setImagePath(path);
-          setImageProperty(Objects.requireNonNull(branchCombo.getSelectedItem()).toString());
-        }
+        setImagePath(path, imageFolder);
       }
     });
+  }
+
+  private void setImagePath(String path, TextFieldWithBrowseButton imageFolder) {
+    if (!ImageUtil.validate(path)) {
+      showMessageDialog(null, "Image file is not suitable. (ex: jpg|jpeg|png|gif|bmp or valid image url)");
+    } else {
+      imageFolder.setText(path);
+      imageProperty.setImagePath(path);
+      setImageProperty(Objects.requireNonNull(branchCombo.getSelectedItem()).toString());
+    }
   }
 
   /**
@@ -215,6 +233,7 @@ public class SimpleDialog extends DialogWrapper {
     super.doCancelAction();
     var currentProject = ProjectUtil.getCurrentProject();
     this.imageProperty = ImageProperty.DEFAULT;
+    this.setImageProperty();
     ImageUtil.repaint(currentProject);
   }
 

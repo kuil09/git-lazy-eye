@@ -12,20 +12,26 @@ public class ImageUtil {
   private static final String IMAGE_PATTERN =
           "([^*]+(\\.(?i)(jpg|jpeg|png|gif|bmp))$)";
 
+  private static final String URL_PATTERN = "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)\n";
+
   private ImageUtil() {
   }
 
   /**
    * Validate image with regular expression
    *
-   * @param image image for validation
+   * @param image Image for validation. It is a file or URL
    * @return true valid image, false invalid image
    */
 
   public static boolean validate(final String image) {
-    Pattern pattern = Pattern.compile(IMAGE_PATTERN);
-    Matcher matcher = pattern.matcher(image);
-    return matcher.matches();
+    Pattern imagePattern = Pattern.compile(IMAGE_PATTERN);
+    Matcher imageMatcher = imagePattern.matcher(image);
+
+    Pattern urlPattern = Pattern.compile(URL_PATTERN);
+    Matcher urlMatcher = urlPattern.matcher(image);
+
+    return imageMatcher.matches() || urlMatcher.matches();
   }
 
   public static void repaint(final Project project) {
