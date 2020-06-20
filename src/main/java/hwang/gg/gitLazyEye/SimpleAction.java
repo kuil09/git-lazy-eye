@@ -10,13 +10,14 @@ public class SimpleAction extends AnAction {
   public void update(@NotNull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setEnabled(false);
-    if (ProjectUtil.isGitProject()) {
+    if (ProjectUtil.isGitProject(e.getProject())) {
       e.getPresentation().setEnabled(true);
     }
   }
 
   @Override
   public void actionPerformed(@NotNull final AnActionEvent e) {
+    ProjectUtil.setCurrentProject(e.getProject());
     new SimpleDialog().showAndGet();
   }
 }

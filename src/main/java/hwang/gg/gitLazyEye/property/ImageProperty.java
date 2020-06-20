@@ -1,8 +1,10 @@
 package hwang.gg.gitLazyEye.property;
 
+import java.util.Objects;
+
 public class ImageProperty {
   public final static ImageProperty DEFAULT = new ImageProperty("",
-          0,
+          50,
           FillType.PLAIN,
           PlacementType.CENTER);
 
@@ -12,18 +14,18 @@ public class ImageProperty {
   private PlacementType placementType;
 
   public ImageProperty(final String fromPropertyString) {
-    var props = fromPropertyString.split(",");
-
-    if (props.length <= 1) { // something is wrong
-      this.imagePath = this.DEFAULT.getImagePath();
-      this.opacity = this.DEFAULT.getOpacity();
-      this.fillType = this.DEFAULT.getFillType();
-      this.placementType = this.DEFAULT.getPlacementType();
+    if (fromPropertyString == null || fromPropertyString.split(",").length <= 1 ) {
+      this.imagePath = DEFAULT.getImagePath();
+      this.opacity = DEFAULT.getOpacity();
+      this.fillType = DEFAULT.getFillType();
+      this.placementType = DEFAULT.getPlacementType();
     } else {
-      this.imagePath = props[0];
-      this.opacity = Integer.valueOf(props[1]);
-      this.fillType = FillType.valueOf(props[2]);
-      this.placementType = PlacementType.valueOf(props[3]);
+      var props = fromPropertyString.split(",");
+
+      this.imagePath = Objects.requireNonNullElse(props[0], "");
+      this.opacity = Objects.requireNonNullElse(Integer.parseInt(props[1]), 50) ;
+      this.fillType = Objects.requireNonNullElse(FillType.valueOf(props[2]), FillType.SCALE);
+      this.placementType = Objects.requireNonNullElse(PlacementType.valueOf(props[3]), PlacementType.CENTER);
     }
   }
 

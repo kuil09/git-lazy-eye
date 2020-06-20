@@ -1,6 +1,7 @@
 package hwang.gg.gitLazyEye;
 
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
 
 import java.util.regex.Matcher;
@@ -27,9 +28,9 @@ public class ImageUtil {
     return matcher.matches();
   }
 
-  public static void repaint(String branchName) {
-    PropertiesComponent prop = PropertiesComponent.getInstance(ProjectUtil.getActiveProject());
-    String imagePath = prop.getValue(branchName);
+  public static void repaint(final Project project) {
+    PropertiesComponent prop = PropertiesComponent.getInstance(project);
+    String imagePath = prop.getValue(ProjectUtil.getCurrentBranchName(project));
     // Image path spec is: <file-path-or-URL>[,<opacity>[,<fill-type>[,<placement>]]]
     prop.setValue(IdeBackgroundUtil.EDITOR_PROP, imagePath);
     IdeBackgroundUtil.repaintAllWindows();

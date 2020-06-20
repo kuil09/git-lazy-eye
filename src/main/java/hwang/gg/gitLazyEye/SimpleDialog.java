@@ -3,11 +3,14 @@ package hwang.gg.gitLazyEye;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import hwang.gg.gitLazyEye.property.FillType;
+import hwang.gg.gitLazyEye.property.ImageProperty;
+import hwang.gg.gitLazyEye.property.Opacity;
+import hwang.gg.gitLazyEye.property.PlacementType;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -17,6 +20,7 @@ import java.awt.event.ItemEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 
@@ -25,19 +29,23 @@ public class SimpleDialog extends DialogWrapper {
   private final ArrayList<JPanel> cardList = new ArrayList<>();
   private final JPanel cardLayout = new JPanel(new CardLayout());
 
-  List<String> branchList = ProjectUtil.getBranchList();
-  ComboBox branches = new ComboBox(branchList.toArray(new String[0]));
+  List<String> branchList;
+  ComboBox branchCombo;
+  final JSlider opacitySlider = new JSlider(JSlider.HORIZONTAL, Opacity.MIN, Opacity.MAX, 0);
+  final ComboBox fillTypeCombo = new ComboBox(FillType.values());
+  final ComboBox placementTypeComobo = new ComboBox(PlacementType.values());
 
   PropertiesComponent prop;
-  Project activeProject;
   String currentBranch;
-  String currentImagePath;
-  String selectedImagePath;
+
+  ImageProperty imageProperty = new ImageProperty("",
+          100, FillType.PLAIN, PlacementType.CENTER);
 
   protected SimpleDialog() {
     super(true);
     init();
     setTitle("GitLazyEye");
+    getCancelAction().setEnabled(true);
     getOKAction().setEnabled(true);
   }
 
@@ -47,13 +55,95 @@ public class SimpleDialog extends DialogWrapper {
     this.initProject();
 
     JPanel mainLayout = new JPanel(new GridLayout(0, 1));
-    JLabel label = new JLabel("Select branch for background setting: ");
-    JLabel label2 = new JLabel("Select an image from disk:");
+    JLabel labelBranch = new JLabel("Select branch for background setting: ");
+    JLabel labelImage = new JLabel("Select an image from disk:");
+    JLabel labelOpacity = new JLabel("Select opacity: ");
+    JLabel labelFillType = new JLabel("Select fill type:");
+    JLabel labelPlacement = new JLabel("Select placement:");
 
     TextFieldWithBrowseButton imageFolder = new TextFieldWithBrowseButton();
-    FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-    imageFolder.addBrowseFolderListener(new TextBrowseFolderListener(descriptor) {
+    this.initBranchCombo(imageFolder);
+    this.initImageFolderChooser(mainLayout, imageFolder);
+    this.initOpacitySlider();
+    this.initFillTypeCombo();
+    this.initPlacementTypeCombo();
 
+    this.applyCards();
+
+    mainLayout.add(labelBranch);
+    mainLayout.add(branchCombo);
+
+    mainLayout.add(labelImage);
+    mainLayout.add(cardLayout);
+    mainLayout.add(imageFolder);
+
+    mainLayout.add(labelOpacity);
+    mainLayout.add(opacitySlider);
+
+    mainLayout.add(labelFillType);
+    mainLayout.add(fillTypeCombo);
+
+    mainLayout.add(labelPlacement);
+    mainLayout.add(placementTypeComobo);
+
+    return mainLayout;
+  }
+
+  private void initOpacitySlider() {
+    this.opacitySlider.setValue(imageProperty.getOpacity());
+    this.opacitySlider.addChangeListener(e -> {
+      imageProperty.setOpacity(this.opacitySlider.getValue());
+      setImageProperty();
+    });
+  }
+
+  private void initFillTypeCombo() {
+    this.fillTypeCombo.setSelectedItem(imageProperty.getFillType());
+    this.fillTypeCombo.addItemListener(e -> {
+      imageProperty.setFillType((FillType) this.fillTypeCombo.getSelectedItem());
+      setImageProperty();
+    });
+  }
+
+  private void initPlacementTypeCombo() {
+    this.placementTypeComobo.setSelectedItem(imageProperty.getPlacementType());
+    this.placementTypeComobo.addItemListener(e -> {
+      imageProperty.setPlacementType((PlacementType) this.placementTypeComobo.getSelectedItem());
+      setImageProperty();
+    });
+  }
+
+  private void initBranchCombo(TextFieldWithBrowseButton imageFolder) {
+    this.setCurrentBranch();
+
+    this.branchList = ProjectUtil.getBranchList(ProjectUtil.getCurrentProject());
+    this.branchCombo = new ComboBox(branchList.toArray(new String[0]));
+
+    if (this.imageProperty.getImagePath() != null) {
+      branchCombo.setSelectedItem(this.currentBranch);
+      imageFolder.setText(this.imageProperty.getImagePath());
+    }
+
+    branchCombo.addItemListener(e -> {
+      if (e.getStateChange() == ItemEvent.SELECTED) {
+        var selectedBranch = Objects.requireNonNull(this.branchCombo.getSelectedItem()).toString();
+        this.setCurrentBranch(selectedBranch);
+
+        imageFolder.setText(this.imageProperty.getImagePath());
+        this.opacitySlider.setValue(this.imageProperty.getOpacity());
+        this.fillTypeCombo.setSelectedItem(this.imageProperty.getFillType());
+        this.placementTypeComobo.setSelectedItem(this.imageProperty.getPlacementType());
+
+        this.setImageProperty();
+      }
+    });
+  }
+
+  private void initImageFolderChooser(final JPanel mainLayout,
+                                      final TextFieldWithBrowseButton imageFolder) {
+    FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+
+    imageFolder.addBrowseFolderListener(new TextBrowseFolderListener(descriptor) {
       @Override
       public void actionPerformed(ActionEvent e) {
         JFileChooser fc = new JFileChooser();
@@ -71,52 +161,32 @@ public class SimpleDialog extends DialogWrapper {
 
         if (!ImageUtil.validate(path)) {
           showMessageDialog(null, "Image file is not suitable. (ex: jpg|jpeg|png|gif|bmp)");
-          path = "";
         } else {
           imageFolder.setText(path);
-          selectedImagePath = path;
-          setImagePath(branches.getSelectedItem().toString(), selectedImagePath);
+          imageProperty.setImagePath(path);
+          setImageProperty(Objects.requireNonNull(branchCombo.getSelectedItem()).toString());
         }
       }
     });
-
-    this.setCurrentBranch();
-    if (this.currentBranch != null) {
-      branches.setSelectedItem(this.currentBranch);
-      this.currentImagePath = prop.getValue(this.currentBranch);
-      imageFolder.setText(this.currentImagePath);
-    }
-
-    branches.addItemListener(e -> {
-      if (e.getStateChange() == ItemEvent.SELECTED) {
-        Object item = e.getItem();
-        this.branches.getSelectedItem().toString();
-        this.selectedImagePath = prop.getValue(this.branches.getSelectedItem().toString());
-        imageFolder.setText(selectedImagePath);
-      }
-    });
-
-    this.applyCards();
-
-    mainLayout.add(label);
-    mainLayout.add(branches);
-    mainLayout.add(label2);
-    mainLayout.add(cardLayout);
-    mainLayout.add(imageFolder);
-
-    return mainLayout;
   }
 
   /**
    * Find and set activated project. It must load current(activated) project's property.
    */
   private void initProject() {
-    this.activeProject = ProjectUtil.getActiveProject();
-    prop = PropertiesComponent.getInstance(this.activeProject);
+    prop = PropertiesComponent.getInstance(ProjectUtil.getCurrentProject());
   }
 
   private void setCurrentBranch() {
-    this.currentBranch = ProjectUtil.getCurrentBranchName();
+    this.currentBranch = ProjectUtil.getCurrentBranchName(ProjectUtil.getCurrentProject());
+    String props = prop.getValue(this.currentBranch);
+    this.imageProperty = new ImageProperty(props);
+  }
+
+  private void setCurrentBranch(String currentBranch) {
+    this.currentBranch = currentBranch;
+    String props = prop.getValue(this.currentBranch);
+    this.imageProperty = new ImageProperty(props);
   }
 
   private void applyCards() {
@@ -136,11 +206,25 @@ public class SimpleDialog extends DialogWrapper {
   @Override
   protected void doOKAction() {
     super.doOKAction();
+    var currentProject = ProjectUtil.getCurrentProject();
+    ImageUtil.repaint(currentProject);
   }
 
-  private void setImagePath(final String selectedBranch, final String selectedImagePath) {
+  @Override
+  public void doCancelAction() {
+    super.doCancelAction();
+    var currentProject = ProjectUtil.getCurrentProject();
+    this.imageProperty = ImageProperty.DEFAULT;
+    ImageUtil.repaint(currentProject);
+  }
+
+  private void setImageProperty() {
+    this.setImageProperty(this.currentBranch);
+  }
+
+  private void setImageProperty(final String selectedBranch) {
     if (selectedBranch != null) {
-      prop.setValue(selectedBranch, selectedImagePath);
+      prop.setValue(selectedBranch, imageProperty.toString());
     }
   }
 }

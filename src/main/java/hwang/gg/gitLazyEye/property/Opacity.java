@@ -1,5 +1,7 @@
 package hwang.gg.gitLazyEye.property;
 
+import java.util.Objects;
+
 public class Opacity {
   public static final int MIN = 0;
   public static final int MAX = 100;
@@ -7,11 +9,7 @@ public class Opacity {
   private Integer value;
 
   public Opacity(final Integer value) {
-    if (value == null) {
-      this.value = 0;
-    } else {
-      this.value = value;
-    }
+    this.value = Objects.requireNonNullElse(value, 0);
   }
 
   public int getValue() {
@@ -20,12 +18,10 @@ public class Opacity {
   }
 
   public void setValue(final int value) {
-    if (value >= 0) {
+    if (value <= 0) {
       this.value = 0;
-    } else if (value <= 100){
-      this.value = 100;
     } else {
-      this.value = value;
+      this.value = Math.max(value, 100);
     }
   }
 }

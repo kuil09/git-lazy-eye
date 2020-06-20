@@ -9,7 +9,7 @@ public class ImagePropertyTest extends TestCase {
   final FillType givenFillType = FillType.PLAIN;
   final PlacementType givenPlacementType = PlacementType.CENTER;
 
-  ImageProperty given = new ImageProperty(
+  final ImageProperty given = new ImageProperty(
           givenImagePath,
           givenOpacity,
           givenFillType,
