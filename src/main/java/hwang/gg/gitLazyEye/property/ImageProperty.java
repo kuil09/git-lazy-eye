@@ -9,21 +9,21 @@ public class ImageProperty {
           PlacementType.CENTER);
 
   private String imagePath;
-  private int opacity;
+  private Opacity opacity;
   private FillType fillType;
   private PlacementType placementType;
 
   public ImageProperty(final String fromPropertyString) {
     if (fromPropertyString == null || fromPropertyString.split(",").length <= 1 ) {
       this.imagePath = DEFAULT.getImagePath();
-      this.opacity = DEFAULT.getOpacity();
+      this.opacity = new Opacity(DEFAULT.getOpacity());
       this.fillType = DEFAULT.getFillType();
       this.placementType = DEFAULT.getPlacementType();
     } else {
       var props = fromPropertyString.split(",");
 
       this.imagePath = Objects.requireNonNullElse(props[0], "");
-      this.opacity = Objects.requireNonNullElse(Integer.parseInt(props[1]), 50) ;
+      this.opacity = Objects.requireNonNullElse(new Opacity(Integer.parseInt(props[1])), new Opacity(50)) ;
       this.fillType = Objects.requireNonNullElse(FillType.valueOf(props[2]), FillType.SCALE);
       this.placementType = Objects.requireNonNullElse(PlacementType.valueOf(props[3]), PlacementType.CENTER);
     }
@@ -34,7 +34,7 @@ public class ImageProperty {
                        final FillType fillType,
                        final PlacementType placementType) {
     this.imagePath = imagePath;
-    this.opacity = opacity;
+    this.opacity = new Opacity(opacity);
     this.fillType = fillType;
     this.placementType = placementType;
   }
@@ -48,11 +48,11 @@ public class ImageProperty {
   }
 
   public int getOpacity() {
-    return opacity;
+    return opacity.getValue();
   }
 
   public void setOpacity(int opacity) {
-    this.opacity = opacity;
+    this.opacity = new Opacity(opacity);
   }
 
   public FillType getFillType() {
@@ -74,7 +74,7 @@ public class ImageProperty {
   @Override
   public String toString() {
     return imagePath + ',' +
-           opacity + ',' +
+           opacity.getValue() + ',' +
            fillType.toString() + ',' +
            placementType.toString();
   }

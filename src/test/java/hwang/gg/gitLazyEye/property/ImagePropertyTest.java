@@ -61,6 +61,6 @@ public class ImagePropertyTest extends TestCase {
             givenFillType.toString() + ',' +
             givenPlacementType.toString();
 
-    assertEquals(given.toString(), expected);
+    assertEquals(expected, given.toString());
   }
 }
