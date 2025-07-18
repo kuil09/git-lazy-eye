@@ -29,10 +29,10 @@ import static javax.swing.JOptionPane.showMessageDialog;
 public class SimpleDialog extends DialogWrapper {
 
   List<String> branchList;
-  ComboBox branchCombo;
+  ComboBox<String> branchCombo;
   final JSlider opacitySlider = new JSlider(JSlider.HORIZONTAL, Opacity.MIN, Opacity.MAX, 0);
-  final ComboBox fillTypeCombo = new ComboBox(FillType.values());
-  final ComboBox placementTypeCombo = new ComboBox(PlacementType.values());
+  final ComboBox<FillType> fillTypeCombo = new ComboBox<>(FillType.values());
+  final ComboBox<PlacementType> placementTypeCombo = new ComboBox<>(PlacementType.values());
 
   PropertiesComponent prop;
   String currentBranch;
@@ -114,7 +114,7 @@ public class SimpleDialog extends DialogWrapper {
     this.setCurrentBranch();
 
     this.branchList = ProjectUtil.getBranchList(ProjectUtil.getCurrentProject());
-    this.branchCombo = new ComboBox(branchList.toArray(new String[0]));
+    this.branchCombo = new ComboBox<>(branchList.toArray(new String[0]));
 
     if (this.imageProperty.getImagePath() != null) {
       branchCombo.setSelectedItem(this.currentBranch);
