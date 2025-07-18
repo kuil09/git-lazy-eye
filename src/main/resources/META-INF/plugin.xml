@@ -1,12 +1,12 @@
 <idea-plugin>
-    <version>1.0.0</version>
+    <version>1.1.1</version>
     <change-notes><![CDATA[
       <ul>
         <li>1.0.0: First release. it can change background image each branch.</li>
       </ul>
     ]]>
     </change-notes>
-    <idea-version since-build="201" until-build="201.*"/>
+    <idea-version since-build="241" until-build="241.*"/>
     <id>hwang.gg.gitLazyEye</id>
     <name>GitLazyEye</name>
     <vendor email="lv0gun9@gmail.com">GunnGu, Hwang</vendor>
