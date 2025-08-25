@@ -14,19 +14,43 @@ public class ImageProperty {
   private PlacementType placementType;
 
   public ImageProperty(final String fromPropertyString) {
-    if (fromPropertyString == null || fromPropertyString.split(",").length <= 1 ) {
-      this.imagePath = DEFAULT.getImagePath();
-      this.opacity = new Opacity(DEFAULT.getOpacity());
-      this.fillType = DEFAULT.getFillType();
-      this.placementType = DEFAULT.getPlacementType();
-    } else {
-      var props = fromPropertyString.split(",");
-
-      this.imagePath = Objects.requireNonNullElse(props[0], "");
-      this.opacity = Objects.requireNonNullElse(new Opacity(Integer.parseInt(props[1])), new Opacity(50)) ;
-      this.fillType = Objects.requireNonNullElse(FillType.valueOf(props[2]), FillType.SCALE);
-      this.placementType = Objects.requireNonNullElse(PlacementType.valueOf(props[3]), PlacementType.CENTER);
+    if (fromPropertyString == null) {
+      copyFrom(DEFAULT);
+      return;
     }
+
+    var props = fromPropertyString.split(",");
+    if (props.length >= 4) {
+      this.imagePath = Objects.requireNonNullElse(props[0], "");
+      this.opacity = new Opacity(parseInteger(props[1], DEFAULT.getOpacity()));
+      this.fillType = parseEnum(FillType.class, props[2], DEFAULT.getFillType());
+      this.placementType = parseEnum(PlacementType.class, props[3], DEFAULT.getPlacementType());
+    } else {
+      copyFrom(DEFAULT);
+    }
+  }
+
+  private static int parseInteger(String value, int defaultValue) {
+    try {
+      return Integer.parseInt(value);
+    } catch (NumberFormatException e) {
+      return defaultValue;
+    }
+  }
+
+  private static <E extends Enum<E>> E parseEnum(Class<E> type, String value, E defaultValue) {
+    try {
+      return Enum.valueOf(type, value);
+    } catch (Exception e) {
+      return defaultValue;
+    }
+  }
+
+  private void copyFrom(ImageProperty other) {
+    this.imagePath = other.getImagePath();
+    this.opacity = new Opacity(other.getOpacity());
+    this.fillType = other.getFillType();
+    this.placementType = other.getPlacementType();
   }
 
   public ImageProperty(final String imagePath,

@@ -63,4 +63,14 @@ public class ImagePropertyTest extends TestCase {
 
     assertEquals(expected, given.toString());
   }
+
+  public void testStringConstructor() {
+    String props = "/bar.png,30,SCALE,TOP_CENTER";
+    ImageProperty parsed = new ImageProperty(props);
+
+    assertEquals("/bar.png", parsed.getImagePath());
+    assertEquals(30, parsed.getOpacity());
+    assertEquals(FillType.SCALE, parsed.getFillType());
+    assertEquals(PlacementType.TOP_CENTER, parsed.getPlacementType());
+  }
 }
