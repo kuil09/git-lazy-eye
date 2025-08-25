@@ -21,7 +21,7 @@ public class Opacity {
     if (value <= 0) {
       this.value = 0;
     } else {
-      this.value = Math.max(value, 100);
+      this.value = Math.min(value, 100);
     }
   }
 }

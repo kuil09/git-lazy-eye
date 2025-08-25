@@ -1,19 +1,19 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '1.17.0'
+    id 'org.jetbrains.intellij' version '1.17.4'
 }
 
 group 'hwang.gg.gitLazyEye'
-version '1.1.1'
+version '2.0.0'
 
 repositories {
     mavenCentral()
 }
-// See https://github.com/JetBrains/gradle-intellij-plugin/
+
 intellij {
-    version '2024.1'
-    plugins 'git4idea'
-    type 'IC'
+    version = '2024.1.4'
+    type = 'IC'
+    plugins = ['git4idea']
 }
 
 java {
@@ -22,18 +22,18 @@ java {
     }
 }
 
-dependencies {
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
+patchPluginXml {
+    sinceBuild = '242'
 }
 
-patchPluginXml {
-    changeNotes """
-      <ul>
-        <li>1.1.1: Add clear background and image from URL feature</li>
-        <li>1.1.0: Add fill, opacity and placement setting features.</li>
-        <li>1.0.2: Fix minor bug. Image path save bug fixed.</li>
-        <li>1.0.1: Fix minor bug.</li>
-        <li>1.0.0: First release. it can change background image each branch.</li>
-      </ul>
-    """
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.test {
+    useJUnit()
 }
