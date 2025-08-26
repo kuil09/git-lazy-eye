@@ -18,10 +18,10 @@ public class Opacity {
   }
 
   public void setValue(final int value) {
-    if (value <= MIN) {
-      this.value = MIN;
+    if (value <= 0) {
+      this.value = 0;
     } else {
-      this.value = Math.min(value, MAX);
+      this.value = Math.min(value, 100);
     }
   }
 }

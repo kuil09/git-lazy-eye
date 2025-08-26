@@ -1,33 +1,26 @@
 <idea-plugin>
-    <version>1.1.1</version>
-    <change-notes><![CDATA[
-      <ul>
-        <li>1.0.0: First release. it can change background image each branch.</li>
-      </ul>
-    ]]>
-    </change-notes>
-    <idea-version since-build="241" until-build="241.*"/>
-    <id>hwang.gg.gitLazyEye</id>
+    <id>kuil09.git-lazy-eye</id>
     <name>GitLazyEye</name>
-    <vendor email="lv0gun9@gmail.com">GunnGu, Hwang</vendor>
-    <description>
-        This plugin for change background image for each git branch.
-        For example, if you have "very" serious branch then change wallpaper "very" special image.
-        Then you can find out easily what branch you are.
-    </description>
+    <vendor url="https://github.com/kuil09/git-lazy-eye">kuil09</vendor>
+    <version>2.0.0</version>
+    <description>Set different editor background images per Git branch.</description>
+
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.vcs</depends>
     <depends>Git4Idea</depends>
-    <extensions defaultExtensionNs="com.intellij"/>
-    <projectListeners>
-        <listener class="hwang.gg.gitLazyEye.GitEventListener"
-                  topic="com.intellij.openapi.vcs.BranchChangeListener">
-        </listener>
-    </projectListeners>
+
+    <idea-version since-build="241"/>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="hwang.gg.gitLazyEye.GitLazyEyeStartup"/>
+    </extensions>
+
     <actions>
-        <action id="hwang.gg.gitLazyEye.SimpleAction" class="hwang.gg.gitLazyEye.SimpleAction" text="GitLazyEye"
-                description="GitLazyEye setting">
-            <keyboard-shortcut first-keystroke="control shift G" keymap="$default"/>
-            <add-to-group group-id="ToolsMenu" anchor="first"/>
+        <action id="GitLazyEye.Action"
+                class="hwang.gg.gitLazyEye.SimpleAction"
+                text="Git Lazy Eye"
+                description="Set editor background image per Git branch">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
     </actions>
 </idea-plugin>

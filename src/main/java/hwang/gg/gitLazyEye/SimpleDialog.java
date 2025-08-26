@@ -138,7 +138,8 @@ public class SimpleDialog extends DialogWrapper {
 
   private void initImageFolderChooser(final JPanel mainLayout,
                                       final TextFieldWithBrowseButton imageFolder) {
-    FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+    // We choose file, not folder
+    FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileDescriptor();
 
     imageFolder.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
       @Override
